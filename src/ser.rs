@@ -93,20 +93,18 @@ where
                 self.writer.write_all(&[CODE_INT64])?;
                 self.writer.write_all(&v.to_le_bytes())?;
             }
-        } else {
-            if v >= -0x00000080 {
-                self.writer.write_all(&[CODE_NEG_INT8])?;
-                self.writer.write_all(&v.to_le_bytes()[..1])?;
-            } else if v >= -0x00008000 {
-                self.writer.write_all(&[CODE_INT16])?;
-                self.writer.write_all(&v.to_le_bytes()[..2])?;
-            } else if v >= -0x80000000 {
-                self.writer.write_all(&[CODE_INT32])?;
-                self.writer.write_all(&v.to_le_bytes()[..4])?;
-            } else if v < -0x80000000 {
-                self.writer.write_all(&[CODE_INT64])?;
-                self.writer.write_all(&v.to_le_bytes())?;
-            }
+        } else if v >= -0x00000080 {
+            self.writer.write_all(&[CODE_NEG_INT8])?;
+            self.writer.write_all(&v.to_le_bytes()[..1])?;
+        } else if v >= -0x00008000 {
+            self.writer.write_all(&[CODE_INT16])?;
+            self.writer.write_all(&v.to_le_bytes()[..2])?;
+        } else if v >= -0x80000000 {
+            self.writer.write_all(&[CODE_INT32])?;
+            self.writer.write_all(&v.to_le_bytes()[..4])?;
+        } else if v < -0x80000000 {
+            self.writer.write_all(&[CODE_INT64])?;
+            self.writer.write_all(&v.to_le_bytes())?;
         }
         Ok(())
     }
@@ -126,7 +124,7 @@ where
     }
 
     fn serialize_u64(self, v: u64) -> Result<()> {
-        self.serialize_nat0(u64::from(v))
+        self.serialize_nat0(v)
     }
 
     fn serialize_f32(self, v: f32) -> Result<()> {

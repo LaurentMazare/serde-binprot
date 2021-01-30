@@ -424,7 +424,7 @@ where
         Ok(_) => Err(Error::TrailingCharacters),
         Err(err) => match err.kind() {
             io::ErrorKind::UnexpectedEof => Ok(value),
-            _ => Err(err)?,
+            _ => Err(err.into()),
         },
     }
 }
