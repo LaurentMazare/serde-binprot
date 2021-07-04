@@ -474,5 +474,15 @@ mod tests {
             2, 98, 49, 254, 210, 4, 0, 2, 98, 50, 254, 46, 22, 1, 2, 98, 49, 254, 210, 4, 0,
         ];
         assert_eq!(to_vec(&foo).unwrap(), expected);
+
+        #[derive(Serialize)]
+        enum Baz {
+            Baz1,
+            Baz2(u64),
+            Baz3,
+        }
+        assert_eq!(to_vec(&Baz::Baz1).unwrap(), [0]);
+        assert_eq!(to_vec(&Baz::Baz2(42)).unwrap(), [1, 42]);
+        assert_eq!(to_vec(&Baz::Baz3).unwrap(), [2]);
     }
 }
