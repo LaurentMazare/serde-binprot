@@ -142,13 +142,13 @@ where
 
     fn serialize_str(self, v: &str) -> Result<()> {
         self.serialize_nat0(v.len() as u64)?;
-        self.writer.write_all(&v.as_bytes())?;
+        self.writer.write_all(v.as_bytes())?;
         Ok(())
     }
 
     fn serialize_bytes(self, v: &[u8]) -> Result<()> {
         self.serialize_nat0(v.len() as u64)?;
-        self.writer.write_all(&v)?;
+        self.writer.write_all(v)?;
         Ok(())
     }
 
