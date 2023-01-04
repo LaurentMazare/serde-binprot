@@ -237,23 +237,23 @@ where
         visitor.visit_newtype_struct(self)
     }
 
-    fn deserialize_seq<V>(mut self, visitor: V) -> Result<V::Value>
+    fn deserialize_seq<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
         let len = self.read_nat0()?;
-        visitor.visit_seq(SeqWithLen::new(&mut self, len as usize))
+        visitor.visit_seq(SeqWithLen::new(self, len as usize))
     }
 
-    fn deserialize_tuple<V>(mut self, len: usize, visitor: V) -> Result<V::Value>
+    fn deserialize_tuple<V>(self, len: usize, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
-        visitor.visit_seq(SeqWithLen::new(&mut self, len))
+        visitor.visit_seq(SeqWithLen::new(self, len))
     }
 
     fn deserialize_tuple_struct<V>(
-        mut self,
+        self,
         _name: &'static str,
         len: usize,
         visitor: V,
@@ -261,19 +261,19 @@ where
     where
         V: Visitor<'de>,
     {
-        visitor.visit_seq(SeqWithLen::new(&mut self, len))
+        visitor.visit_seq(SeqWithLen::new(self, len))
     }
 
-    fn deserialize_map<V>(mut self, visitor: V) -> Result<V::Value>
+    fn deserialize_map<V>(self, visitor: V) -> Result<V::Value>
     where
         V: Visitor<'de>,
     {
         let len = self.read_nat0()?;
-        visitor.visit_map(SeqWithLen::new(&mut self, len as usize))
+        visitor.visit_map(SeqWithLen::new(self, len as usize))
     }
 
     fn deserialize_struct<V>(
-        mut self,
+        self,
         _name: &'static str,
         fields: &'static [&'static str],
         visitor: V,
@@ -281,7 +281,7 @@ where
     where
         V: Visitor<'de>,
     {
-        visitor.visit_seq(SeqWithLen::new(&mut self, fields.len()))
+        visitor.visit_seq(SeqWithLen::new(self, fields.len()))
     }
 
     fn deserialize_enum<V>(
@@ -398,18 +398,18 @@ impl<'de, 'a, R: io::Read + 'a> de::VariantAccess<'de> for VariantAccess<'a, R> 
         seed.deserialize(self.de)
     }
 
-    fn tuple_variant<V>(mut self, len: usize, visitor: V) -> Result<V::Value>
+    fn tuple_variant<V>(self, len: usize, visitor: V) -> Result<V::Value>
     where
         V: de::Visitor<'de>,
     {
-        visitor.visit_seq(SeqWithLen::new(&mut self.de, len))
+        visitor.visit_seq(SeqWithLen::new(self.de, len))
     }
 
-    fn struct_variant<V>(mut self, fields: &'static [&'static str], visitor: V) -> Result<V::Value>
+    fn struct_variant<V>(self, fields: &'static [&'static str], visitor: V) -> Result<V::Value>
     where
         V: de::Visitor<'de>,
     {
-        visitor.visit_seq(SeqWithLen::new(&mut self.de, fields.len()))
+        visitor.visit_seq(SeqWithLen::new(self.de, fields.len()))
     }
 }
 

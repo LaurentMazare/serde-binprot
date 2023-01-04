@@ -62,8 +62,7 @@ where
     type SerializeTupleVariant = Self;
 
     fn serialize_bool(self, b: bool) -> Result<()> {
-        let b = if b { 1 } else { 0 };
-        self.writer.write_all(&[b])?;
+        self.writer.write_all(&[u8::from(b)])?;
         Ok(())
     }
 
@@ -184,7 +183,7 @@ where
         // how many variants are available. This is only correct for types with
         // less than 256 variants.
         // https://github.com/serde-rs/serde/issues/663
-        self.serialize_as_u8(variant_index as u32)
+        self.serialize_as_u8(variant_index)
     }
 
     fn serialize_newtype_struct<T>(self, _name: &'static str, value: &T) -> Result<()>
@@ -204,7 +203,7 @@ where
     where
         T: ?Sized + Serialize,
     {
-        self.serialize_as_u8(variant_index as u32)?;
+        self.serialize_as_u8(variant_index)?;
         value.serialize(&mut *self)
     }
 
@@ -237,7 +236,7 @@ where
         _variant: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeTupleVariant> {
-        self.serialize_as_u8(variant_index as u32)?;
+        self.serialize_as_u8(variant_index)?;
         Ok(self)
     }
 
@@ -262,7 +261,7 @@ where
         _variant: &'static str,
         _len: usize,
     ) -> Result<Self::SerializeStructVariant> {
-        self.serialize_as_u8(variant_index as u32)?;
+        self.serialize_as_u8(variant_index)?;
         Ok(self)
     }
 }
